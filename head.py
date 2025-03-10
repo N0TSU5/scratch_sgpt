@@ -26,7 +26,7 @@ class Head(nn.Module):
         ).cuda()  # Global decay
 
         # Initialize spiking layer
-        self.spiking_layer = snn.Leaky(beta=0.3, threshold=0.05)
+        self.spiking_layer = snn.Leaky(beta=0.3, threshold=0.25)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
