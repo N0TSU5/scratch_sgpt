@@ -6,6 +6,7 @@ import snntorch as snn
 
 
 class Head(nn.Module):
+    """A single head of the recurrent spiking state space model"""
     def __init__(self, embedding_dim: int, device="cuda") -> None:
         super().__init__()
 
@@ -53,7 +54,7 @@ class Head(nn.Module):
         k = self.K(x)  # Key
         v = self.V(x)  # Value
 
-        # Output tensor storage
+        # Initialize output tensor
         new_embeddings = torch.zeros_like(x, device=self.device)
 
         # Initialize membrane potential for spiking neurons
