@@ -20,12 +20,19 @@ class Model(nn.Module):
 
         self.device = device
 
-    def forward(self, input_ids):
+    def forward(self, input_ids, target_ids=None):
         embeddings = self.embedding(input_ids).to(self.device)
         embeddings = self.blocks(embeddings)
         logits = self.lm_head(embeddings)
 
-        return logits
+        if target_ids is not None:
+            loss = F.cross_entropy(
+                logits.view(-1, logits.size(-1)), target_ids.view(-1)
+            )
+        else:
+            loss = None
+
+        return logits, loss
 
     def generate(self, input_ids, max_new_tokens):
         for _ in range(max_new_tokens):
@@ -34,13 +41,10 @@ class Model(nn.Module):
             logits = logits[:, -1, :]
 
             # Apply softmax to compute probabilities.
-            probs = F.softmax(logits, dim=-1) 
-            
-            # Sample from the distribution.
-            idx_next = torch.multinomial(
-                probs, num_samples=1
-            ) 
+            probs = F.softmax(logits, dim=-1)
 
+            # Sample from the distribution.
+            idx_next = torch.multinomial(probs, num_samples=1)
             input_ids = torch.cat([input_ids, idx_next], dim=-1)
 
         return input_ids
