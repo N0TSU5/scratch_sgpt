@@ -1,9 +1,9 @@
-from binary_embedding import SubwordBinaryEmbedding
+from SpikeEmbedding import SpikeEmbedding
 
 def test_binary_embedding():
     # Initialize the model
     embedding_dim = 256
-    model = SubwordBinaryEmbedding(embedding_dim=embedding_dim)
+    model = SpikeEmbedding(embedding_dim=embedding_dim)
     
     # Test cases
     test_texts = [

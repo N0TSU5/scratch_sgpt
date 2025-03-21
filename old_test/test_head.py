@@ -1,15 +1,15 @@
 import torch
 import sys
 from pathlib import Path
-from head import Head
-from binary_embedding import SubwordBinaryEmbedding
+from Head import Head
+from SpikeEmbedding import SpikeEmbedding
 
 def test_srwkv_layer(string):
     """Test the basic functionality of the SRWKV layer"""
     embedding_dim = 16
 
     # Initialize embedding and tokenize string
-    embedding = SubwordBinaryEmbedding(embedding_dim=embedding_dim)
+    embedding = SpikeEmbedding(embedding_dim=embedding_dim)
     x = embedding(string)
 
     # Initialize layer with lower threshold to ensure spikes

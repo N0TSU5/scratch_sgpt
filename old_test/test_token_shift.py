@@ -1,5 +1,5 @@
 import torch
-from token_shift import TokenShift
+from TokenShift import TokenShift
 
 def test_token_shift():
     # Test parameters
