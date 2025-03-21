@@ -29,12 +29,21 @@ class Model(nn.Module):
 
     def generate(self, input_ids, max_new_tokens):
         for _ in range(max_new_tokens):
+            # Get the logits for the next token.
             logits = self(input_ids)
             logits = logits[:, -1, :]
-            probs = F.softmax(logits, dim=-1)
-            idx_next = torch.multinomial(probs, num_samples=1)
+
+            # Apply softmax to compute probabilities.
+            probs = F.softmax(logits, dim=-1) 
+            
+            # Sample from the distribution.
+            idx_next = torch.multinomial(
+                probs, num_samples=1
+            ) 
+
             input_ids = torch.cat([input_ids, idx_next], dim=-1)
-        print(TokenizerWrapper().decode(input_ids))
+
+        return input_ids
 
 
 if __name__ == "__main__":
@@ -46,4 +55,5 @@ if __name__ == "__main__":
     text = "The quick brown fox jumps over the lazy dog"
     input_ids = tokenizer.encode(text).to("cuda")
 
-    logits = model.generate(input_ids, max_new_tokens=5)
+    logits = model.generate(input_ids, max_new_tokens=50)
+    print(tokenizer.decode(logits))
