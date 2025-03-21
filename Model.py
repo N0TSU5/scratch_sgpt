@@ -44,16 +44,3 @@ class Model(nn.Module):
             input_ids = torch.cat([input_ids, idx_next], dim=-1)
 
         return input_ids
-
-
-if __name__ == "__main__":
-    tokenizer = TokenizerWrapper()
-    model = Model(vocab_size=tokenizer.vocab_size, embedding_dim=768, num_blocks=10).to(
-        "cuda"
-    )
-
-    text = "The quick brown fox jumps over the lazy dog"
-    input_ids = tokenizer.encode(text).to("cuda")
-
-    logits = model.generate(input_ids, max_new_tokens=50)
-    print(tokenizer.decode(logits))
