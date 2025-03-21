@@ -27,6 +27,15 @@ class Model(nn.Module):
 
         return logits
 
+    def generate(self, input_ids, max_new_tokens):
+        for _ in range(max_new_tokens):
+            logits = self(input_ids)
+            logits = logits[:, -1, :]
+            probs = F.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+            input_ids = torch.cat([input_ids, idx_next], dim=-1)
+        print(TokenizerWrapper().decode(input_ids))
+
 
 if __name__ == "__main__":
     tokenizer = TokenizerWrapper()
@@ -37,9 +46,4 @@ if __name__ == "__main__":
     text = "The quick brown fox jumps over the lazy dog"
     input_ids = tokenizer.encode(text).to("cuda")
 
-    logits = model.forward(input_ids)
-    logits = logits[:, -1, :]
-    probs = F.softmax(logits, dim=-1)
-
-    idx_next = torch.multinomial(probs, num_samples=1)
-    print(text + tokenizer.decode(idx_next)[0])
+    logits = model.generate(input_ids, max_new_tokens=5)
