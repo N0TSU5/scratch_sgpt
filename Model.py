@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from Block import Block
 from SpikeEmbedding import SpikeEmbedding
-from TokenizerWrapper import TokenizerWrapper
 
 
 class Model(nn.Module):
@@ -37,7 +36,7 @@ class Model(nn.Module):
     def generate(self, input_ids, max_new_tokens):
         for _ in range(max_new_tokens):
             # Get the logits for the next token.
-            logits = self(input_ids)
+            logits, _ = self(input_ids)
             logits = logits[:, -1, :]
 
             # Apply softmax to compute probabilities.
